@@ -19,31 +19,51 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     }
   }`
   const renderLocation = ({item} :{item:any}) => (
-    <ListItem key={item.id} bottomDivider>
+    <ListItem key={item.id} bottomDivider onPress={()=>{
+      navigation.navigate('LocationDetailsScreen',item)
+    }}>
       <ListItem.Content>
-        <ListItem.Title>{item.id} - {item.name}</ListItem.Title>
+        <ListItem.Title>{item.name}</ListItem.Title>
         <ListItem.Subtitle>{item.type}</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
   )
   const [page,setPage] = useState(1)
+  const [locations, setLocations] = useState([]);
   const { loading, error, data, fetchMore } = useQuery(query,{variables:{page}});
   if (loading) return <View>
   <Text style={styles.title}>loading</Text></View>;
   if (error) return <View>
   <Text style={styles.title}>Error</Text></View>;
+  //console.log(data)
+  if(locations.length == 0)
+    setLocations(data.locations.results);
+  let endReached = false;
   return (<ThemeProvider>
-    <Button title={page.toString()} />
-    <Text>{page}</Text>
-    <FlatList data={data.locations.results} renderItem={renderLocation} onEndReached={()=>{
-      fetchMore({
-        variables: {
-          page: page+1
-        },
-      })
-      setPage(page+1);
-    }}
-    onEndReachedThreshold={.5}
+    <FlatList
+      keyExtractor={(location) => location.id.toString()}
+      initialNumToRender={20}
+      data={locations}
+      renderItem={renderLocation}
+      onEndReached={()=>{
+        if(!endReached){
+          const more = fetchMore({
+            variables: {
+              page: page+1
+            },
+          })
+          more.then((v)=>{
+            console.log(v.data.locations.results);
+            setLocations(locations.concat(v.data.locations.results))
+            if(v.data.locations.results.length < 20){
+              endReached=true
+            }else{
+              setPage(page+1);
+            }
+          })
+        }
+      }}
+      onEndReachedThreshold={.7}
     >
 
     </FlatList>
