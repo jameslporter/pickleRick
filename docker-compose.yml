@@ -5,18 +5,26 @@ services:
     volumes:
       - ./server:/workspace
     working_dir: /workspace
-    command: "npm run start:dev"
+    command: "node index.js"
     ports:
-      - 4100:4100
-  db:
-    image: postgres:latest
+      - 4000:4000
+  mongo:
+    image: mongo
     restart: unless-stopped
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mongo-data:/data/db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 2d2d2@#d222d22
-      POSTGRES_DB: plumbus
-
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: e398SDc2
+      MONGO_INITDB_DATABASE: plumbus
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: e398SDc2
+      ME_CONFIG_MONGODB_URL: mongodb://root:e398SDc2@mongo:27017/
 volumes:
-  postgres-data:
+  mongo-data:
