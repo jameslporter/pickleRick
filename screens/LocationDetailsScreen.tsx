@@ -12,24 +12,24 @@ const styles = StyleSheet.create({
       flex: 1,
     },
 });
-const renderCharacter = ({item} :{item:any}) => (
-    <ListItem key={item.id} bottomDivider onPress={()=>{
-      
-    }}>
-      <ListItem.Content>
-        <ListItem.Title>{item.name}</ListItem.Title>
-        <ListItem.Subtitle>{item.species}</ListItem.Subtitle>
-      </ListItem.Content>
-      <ListItem.Content>
-      <Image
-        source={{ uri: item.image }}
-        containerStyle={styles.item}
-        />
-      </ListItem.Content>
-    </ListItem>
-  )
 
 export default function LocationDetailsScreen({ route, navigation }: RootTabScreenProps<'TabOne'>) {
+    const renderCharacter = ({item} :{item:any}) => (
+        <ListItem key={item.id} bottomDivider onPress={()=>{
+            navigation.navigate('CharacterDetailScreen',item)
+        }}>
+          <ListItem.Content>
+            <ListItem.Title>{item.name}</ListItem.Title>
+            <ListItem.Subtitle>{item.species}</ListItem.Subtitle>
+          </ListItem.Content>
+          <ListItem.Content>
+          <Image
+            source={{ uri: item.image }}
+            containerStyle={styles.item}
+            />
+          </ListItem.Content>
+        </ListItem>
+    )
     let data = route.params;
     console.log(route.params)
     navigation.setOptions({title:data.name})
