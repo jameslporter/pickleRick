@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   app:
     image: node:latest 
@@ -14,14 +13,10 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    # Uncomment to change startup options
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 2d2d2@#d222d22
       POSTGRES_DB: plumbus
-
-    # Add "forwardPorts": ["27017"] to **devcontainer.json** to forward MongoDB locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
 
 volumes:
   postgres-data:
