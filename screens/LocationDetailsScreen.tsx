@@ -1,6 +1,6 @@
 import { Platform, StyleSheet, FlatList } from 'react-native';
 import { RootTabScreenProps } from '../types';
-import { Button, ThemeProvider, ListItem, Image } from 'react-native-elements';
+import { Button, ThemeProvider, ListItem, Image, Text } from 'react-native-elements';
 const styles = StyleSheet.create({
     list: {
       width: '100%',
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
       width: '100%',
       flex: 1,
     },
-  });
+});
 const renderCharacter = ({item} :{item:any}) => (
     <ListItem key={item.id} bottomDivider onPress={()=>{
       
@@ -32,16 +32,18 @@ const renderCharacter = ({item} :{item:any}) => (
 export default function LocationDetailsScreen({ route, navigation }: RootTabScreenProps<'TabOne'>) {
     let data = route.params;
     console.log(route.params)
+    navigation.setOptions({title:data.name})
     return (<ThemeProvider>
-        <ListItem.Content>
-        <ListItem.Title>{data.name}</ListItem.Title>
-        <ListItem.Subtitle>{data.type}</ListItem.Subtitle>
-      </ListItem.Content>
+        <Text h3>Type: {data.type}</Text>
+
+      { data.residents.length > 0 ?
       <FlatList
       keyExtractor={(location) => location.id.toString()}
       initialNumToRender={20}
       data={data.residents}
       renderItem={renderCharacter}
       ></FlatList>
+      : <Text h4>No characters documented yet.</Text>
+    }
     </ThemeProvider>);
 }
