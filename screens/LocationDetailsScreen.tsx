@@ -1,6 +1,6 @@
-import { Platform, StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 import { RootTabScreenProps } from '../types';
-import { Button, ThemeProvider, ListItem, Image, Text } from 'react-native-elements';
+import { ThemeProvider, ListItem, Image, Text } from 'react-native-elements';
 const styles = StyleSheet.create({
     list: {
       width: '100%',

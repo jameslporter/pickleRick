@@ -13,7 +13,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       results{
         id name type dimension
         residents{
-          id name species image
+          id name status type gender origin{name} location { name } episode {id name } species image
         }
       }
     }
