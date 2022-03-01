@@ -53,8 +53,9 @@ export default function CharacterDetailScreen({ route, navigation }: RootTabScre
     const [getID, setID] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [noteText,setNoteText] = useState('')
-    const [updateNote, { updateNoteData }] = useMutation(updateNoteQuery,{'client':client});
-    const [createNote, { createNoteData }] = useMutation(createNoteQuery,{'client':client});
+    let mutationOptions = {'client':client,refetchQueries: [getNotesQuery, 'getNotes']}
+    const [updateNote, { updateNoteData }] = useMutation(updateNoteQuery,mutationOptions);
+    const [createNote, { createNoteData }] = useMutation(createNoteQuery,mutationOptions);
     let character = route.params;
     const getData = (key:string) => {
       AsyncStorage.getItem(key).then((value)=>{
