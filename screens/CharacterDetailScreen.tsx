@@ -38,8 +38,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#000',
     },
     item: {
-      aspectRatio: 1,
       flex: 1,
+      width: '100%',
+      resizeMode: 'contain',
     },
 });
 const renderEpisode = ({item} :{item:any}) => (
