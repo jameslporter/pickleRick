@@ -1,8 +1,8 @@
-import { StyleSheet, FlatList, View } from 'react-native';
+import { StyleSheet, FlatList, View, TextInput, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { RootTabScreenProps } from '../types';
-import { ThemeProvider, ListItem, Image, Text } from 'react-native-elements';
-import { ApolloClient, InMemoryCache, gql, useQuery } from '@apollo/client';
+import { ThemeProvider, ListItem, Image, Text, Icon, Button } from 'react-native-elements';
+import { ApolloClient, InMemoryCache, gql, useQuery, useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { v1 as uuidv1 } from 'uuid';
 
@@ -35,7 +35,6 @@ const createNoteQuery = gql`mutation CreateNote($input: NoteInput!) {
 const styles = StyleSheet.create({
     list: {
       width: '100%',
-      backgroundColor: '#000',
     },
     item: {
       flex: 1,
@@ -52,6 +51,11 @@ const renderEpisode = ({item} :{item:any}) => (
 )
 export default function CharacterDetailScreen({ route, navigation }: RootTabScreenProps<'TabOne'>) {
     const [getID, setID] = useState('');
+    const [editMode, setEditMode] = useState(false);
+    const [noteText,setNoteText] = useState('')
+    const [updateNote, { updateNoteData }] = useMutation(updateNoteQuery,{'client':client});
+    const [createNote, { createNoteData }] = useMutation(createNoteQuery,{'client':client});
+    let character = route.params;
     const getData = (key:string) => {
       AsyncStorage.getItem(key).then((value)=>{
         console.log('async value',value)
@@ -64,20 +68,31 @@ export default function CharacterDetailScreen({ route, navigation }: RootTabScre
         }
       })
     }
+    function save(){
+      if(data.getMyNotes.length > 0){
+        updateNote({variables:{input:{body:noteText,characterID:character.id,userID:getID}}})
+      }else{
+        createNote({variables:{input:{body:noteText,characterID:character.id,userID:getID}}})
+      }
+      setEditMode(false)
+    }
+    function edit(){
+      setEditMode(true)
+    }
     getData('uniqueID')
-    let character = route.params;
     console.log(route.params)
     navigation.setOptions({title:character.name})
     console.log(getID,character.id);
     const { loading, error, data, fetchMore } = useQuery(getNotesQuery,{variables:{"userId": getID,"characterId":character.id},'client':client});
     if (loading) return <View>
-    <Text style={styles.title}>loading</Text></View>;
+    <Text>loading</Text></View>;
     if (error){
       console.log(error)
       return <View>
-    <Text style={styles.title}>Error</Text></View>;
+    <Text>Error</Text></View>;
     }
-    console.log(data)
+    let text = ''
+    if(data.getMyNotes.length > 0) text = data.getMyNotes[0].body
     return (<ThemeProvider>
         <ListItem.Content>
 
@@ -90,19 +105,31 @@ export default function CharacterDetailScreen({ route, navigation }: RootTabScre
         <Text h3>Species: {character.species}</Text>
         <Text h3>Gender: {character.gender}</Text>
         <Text h3>Status: {character.status}</Text>
+        {character.episode.length > 0 ?
+        <View>
         <Text h3>Episodes:</Text>
         <FlatList
-      keyExtractor={(location) => location.id.toString()}
-      initialNumToRender={20}
-      data={character.episode}
-      renderItem={renderEpisode}
-      ></FlatList>
+        keyExtractor={(location) => location.id.toString()}
+        initialNumToRender={20}
+        data={character.episode}
+        renderItem={renderEpisode}
+        style={{height:200,flexGrow: 0}}
+        ></FlatList>
+        </View>: <View><Text h3>No episode information available.</Text></View>
+      }
+      {editMode === true ?
+        <View>
+          <TextInput multiline={true} onChangeText={(value)=>setNoteText(value)} numberOfLines={5} defaultValue={text} style={{ height:100, textAlignVertical: 'top',borderColor:'black',borderWidth:1}}></TextInput>
+          <Button onPress={save} title='Save Note' />
+        </View>: <View></View>
+      }
+        
       { data.getMyNotes.length > 0 ?
       <View>
         <Text h3>Notes:</Text>
-        <Text h4>{data.getMyNotes[0].body}</Text>
+        <Text h4>{data.getMyNotes[0].body}</Text><Icon onPress={edit} name="edit"/>
       </View>
-      : <View><Text>No note.</Text></View>}
-
+      : <View><Text>No note.</Text><Icon onPress={edit} name="edit"/></View>}
+      <View></View>
     </ThemeProvider>);
 }
