@@ -14,7 +14,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
+import LocationsScreen from '../screens/LocationsScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import LocationDetailsScreen from '../screens/LocationDetailsScreen';
 import CharacterDetailScreen from '../screens/CharacterDetailScreen';
@@ -40,7 +40,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Locations" component={TabOneScreen} />
+      <Stack.Screen name="Locations" component={LocationsScreen} />
       <Stack.Screen name="LocationDetailsScreen" component={LocationDetailsScreen} />
       <Stack.Screen name='CharacterDetailScreen' component={CharacterDetailScreen} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>

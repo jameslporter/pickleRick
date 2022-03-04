@@ -7,7 +7,7 @@ import {
   useQuery,
   gql
 } from "@apollo/client";
-export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function LocationsScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const query = gql`query GetLocations($page:Int){
     locations(page:$page){
       results{
