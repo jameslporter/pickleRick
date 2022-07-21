@@ -4,7 +4,8 @@ import { RootTabScreenProps } from '../types';
 import { ThemeProvider, ListItem, Image, Text, Icon, Button } from 'react-native-elements';
 import { ApolloClient, InMemoryCache, gql, useQuery, useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { v1 as uuidv1 } from 'uuid';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 const storeData = async (key:string,value:string) => {
   try {
@@ -63,7 +64,7 @@ export default function CharacterDetailScreen({ route, navigation }: RootTabScre
         if(value != null){
           setID(value);
         }else{
-          let newID = uuidv1();
+          let newID = uuidv4();
           setID(newID)
           storeData(key,newID)
         }
