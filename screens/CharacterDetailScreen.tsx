@@ -14,7 +14,7 @@ const storeData = async (key:string,value:string) => {
   }
 }
 const client = new ApolloClient({
-  uri: 'https://2fdc-216-62-160-73.ngrok.io/graphql',
+  uri: 'https://612b-104-192-239-126.ngrok.io/graphql',
   cache: new InMemoryCache()
 });
 const getNotesQuery = gql`query getNotes($userId: ID!, $characterId: String!) {
